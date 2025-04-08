@@ -7,15 +7,16 @@
 </head>
 
 <?php
-require_once 'functions.php'; // Funktionen werden hereingestellt
+define('APP_ROOT', __DIR__);
+require_once APP_ROOT . '/templates/head.php'; 
+require_once APP_ROOT . '/templates/footer.php';
+require_once APP_ROOT . '/src/functions.php';
+
 
 
 
 // Datenbankverbindung wird hereingestellt
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "todo_list";
+
 
 try {
     $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
