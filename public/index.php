@@ -1,6 +1,6 @@
 <?php
 // Definiere den Root-Pfad der Anwendung
-define('APP_ROOT', dirname(__DIR__)); // Zeigt auf /meinprojekt
+define('APP_ROOT', dirname(__DIR__));
 
 // Lade wichtige Konfigurationen (enthält z.B. DB-Zugangsdaten als Konstanten oder Variablen)
 require_once APP_ROOT . '/config/config.php'; 
@@ -19,6 +19,7 @@ try {
     exit; 
 }
 
+
 // --- HIER KOMMT DEINE LOGIK FÜR DIE AKTUELLE SEITE --- 
 // Z.B. Hinzufügen von Tasks (wie in deinem Code)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_task') {
@@ -32,8 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
      exit;
 }
 
+
 // Hole die Tasks für die Anzeige
 $tasks = getTasks($conn); // Funktion in functions.php
+
 
 // Lade das HTML-Template und übergib die Tasks
 // Hier beginnt die Trennung von Logik und Präsentation

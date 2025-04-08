@@ -9,19 +9,20 @@ function connect_db() {
     $username = DB_USER;
     $password = DB_PASS;
     $dbname = DB_NAME;
+    $dbcharset = DB_CHARSET; // Optional, aber empfohlen
 
-
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=$dbcharset", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC); // Nützlich!
     return $conn;
 }
 
+
 // Deine anderen Funktionen...
 function getTasks(PDO $conn) {
-    $stmt = $conn->query("SELECT id, task FROM tasks ORDER BY created_at DESC");
-    return $stmt->fetchAll();
+    $
 }
+
 
 function addTask(PDO $conn, string $taskText) {
     try {
@@ -47,6 +48,5 @@ function write_error(string $message) {
     error_log("FEHLER: " . $message);
 }
 
-// AJAX Handler wird nicht mehr hier, sondern in src/delete_task.php sein
 
 ?>
