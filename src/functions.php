@@ -1,41 +1,52 @@
 <?php
+// Stelle sicher, dass Konfigurationen (falls nötig) geladen sind
+// (oft nicht nötig, wenn index.php das schon macht)
+
+// Funktion zur Datenbankverbindung (Beispiel)
+function connect_db() {
+    // Hole Zugangsdaten (z.B. aus Konstanten, die in config.php definiert wurden)
+    $servername = DB_HOST; 
+    $username = DB_USER;
+    $password = DB_PASS;
+    $dbname = DB_NAME;
 
 
-
-function write_error($message):void {
-	$logFile = __DIR__ . '\error.log';// Protokolldatei im übergeordneten Verzeichnis
-	$timestamp = date('d-m-Y H:i:s');
-	$logMessage = "[$timestamp] $message\n";
-	
-	file_put_contents($logFile, $logMessage, FILE_APPEND);
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC); // Nützlich!
+    return $conn;
 }
 
-
-function hinweis_log($message):void{
-	$hinweise = __DIR__ . '\hinweis.log';
-	$timestamp = date('d-m-Y H:i:s');
-	$logMessage = "[$timestamp] $message\n";
-
-	file_put_contents($hinweise, $logMessage, FILE_APPEND | LOCK_EX);
+// Deine anderen Funktionen...
+function getTasks(PDO $conn) {
+    $stmt = $conn->query("SELECT id, task FROM tasks ORDER BY created_at DESC");
+    return $stmt->fetchAll();
 }
 
-
-function getTasks($conn) {
-    try{
-        $sql = "SELECT * FROM tasks ORDER BY id DESC";
+function addTask(PDO $conn, string $taskText) {
+    try {
+        $sql = "INSERT INTO tasks (task) VALUES (:task)";
         $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':task', $taskText);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        hinweis_log("Aufgabe erfolgreich hinzugefügt.");
+        return true;
+    } catch(PDOException $e) {
+        write_error("Fehler beim Hinzufügen der Aufgabe: " . $e->getMessage());
+        return false;
     }
-    catch(PDOException $e){
-        write_error("Fehler beim Abrufen der Aufgaben: " . $e->getMessage());
-        return [];
-    }
-
 }
 
-function deleteTask($conn, $taskId) {
-
+function hinweis_log(string $message) {
+    // Deine Logging-Implementierung
+    error_log("HINWEIS: " . $message);
 }
+
+function write_error(string $message) {
+    // Deine Error-Logging-Implementierung
+    error_log("FEHLER: " . $message);
+}
+
+// AJAX Handler wird nicht mehr hier, sondern in src/delete_task.php sein
 
 ?>
