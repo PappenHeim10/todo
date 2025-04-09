@@ -14,7 +14,7 @@
         <?php if (isset($tasks) && count($tasks) > 0): ?>
             <?php foreach ($tasks as $task): ?>
                 <div class='task' id="task-<?= htmlspecialchars($task['id']) ?>"> <p><?= htmlspecialchars($task['task']) ?></p>
-                    <button class='delete' data-id='<?= htmlspecialchars($task['id']) ?>'>Delete</button>
+                    <button class='delete' data-id='<?= htmlspecialchars($task['id']) ?>'>Löschen</button>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
@@ -23,8 +23,8 @@
     </div>
 
     <form action="index.php" method="POST" id="addTaskForm"> 
-        <input type="hidden" name="action" value="add_task"> <input type="text" name="task" id="task" placeholder="Add a new task...">
-        <button id="addTask" type="submit">Add Task</button>
+        <input type="hidden" name="action" value="add_task"> <input type="text" name="task" id="task" placeholder="Aufgabe hinzufügen...">
+        <button id="addTask" type="submit">Hinzufügen</button>
     </form>
     </div>
 
