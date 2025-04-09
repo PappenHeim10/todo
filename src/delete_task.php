@@ -6,6 +6,7 @@ if (!defined('APP_ROOT')) {
     define('APP_ROOT', dirname(__DIR__)); // Annahme: deleteTask.php ist in src/
 }
 
+
 // Lade Konfigurationen und Autoloader (oder benötigte Klassen/Funktionen)
 require_once APP_ROOT . '/config/config.php';
 require_once APP_ROOT . '/vendor/autoload.php'; // ODER dein custom autoload.php
@@ -45,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'DELETE' && $_SERVER['REQUEST_METHOD'] !== 'G
 
     exit;
 }
+
 
 $taskId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]]);
 

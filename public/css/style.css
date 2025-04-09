@@ -147,3 +147,35 @@ footer {
     width: 100%; /* Nimmt volle Breite ein */
     /* Kein max-width, damit er unter dem .wrapper zentriert bleibt */
 }
+
+.task .edit-input,
+.task .save {
+    display: none;
+}
+
+/* Ansicht, wenn das .task-Element die Klasse .editmode hat */
+.task.editmode p,
+.task.editmode .edit {
+    display: none; /* Verstecke Paragraph und Edit-Button */
+}
+
+.task.editmode .edit-input,
+.task.editmode .save {
+    display: inline-block; /* Zeige Input und Save-Button an */
+    /* Oder display: block; je nach gewünschtem Layout */
+}
+
+/* Optional: Styling für das Input-Feld im Edit-Modus */
+.task.editmode .edit-input {
+    flex-grow: 1; /* Nimm verfügbaren Platz ein */
+    margin-right: 10px; /* Abstand zum Save-Button */
+    padding: 5px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Optional: Stelle sicher, dass Buttons nebeneinander bleiben */
+.task-buttons {
+     display: flex;
+     gap: 5px; /* Kleiner Abstand zwischen Buttons */
+}

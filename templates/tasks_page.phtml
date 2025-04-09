@@ -14,6 +14,9 @@
         <?php if (isset($tasks) && count($tasks) > 0): ?>
             <?php foreach ($tasks as $task): ?>
                 <div class='task' id="task-<?= htmlspecialchars($task['id']) ?>"> <p><?= htmlspecialchars($task['task']) ?></p>
+                    <input type="text" class="edit-input" data-id='<?= htmlspecialchars($task['id']) ?>' value="<?= htmlspecialchars($task['task']) ?>" style="display:none;">
+                    <button class="save" data-id='<?= htmlspecialchars($task['id']) ?>' style="display:none;">Speichern"></button>
+                    <button class='edit' data-id='<?= htmlspecialchars($task['id']) ?>'>Bearbeiten</button>
                     <button class='delete' data-id='<?= htmlspecialchars($task['id']) ?>'>Löschen</button>
                 </div>
             <?php endforeach; ?>
@@ -32,6 +35,15 @@
         &copy; <?= date('Y') ?> Todo App. All rights reserved.
     </footer>
     </div>
+    <?php
+        // OPTIM: Es gibt eine Möglichkeit die einen Rerouter zu benutzen, um die URL nicht im JS zu haben.
+        $deleteBaseUrl = APP_ROOT . '/src/delete_task.php?id=';
+        $updateBaseUrl = APP_ROOT . '/src/update_task.php?id=';    // Basis-URL zum Aktualisieren (ID wird später oder im Body hinzugefügt)
+    ?>
+    <script>
+        const DELETE_TASK_URL_BASE = <?php echo json_encode($deleteBaseUrl); ?>;
+        const UPDATE_TASK_URL_BASE = <?php echo json_encode($updateBaseUrl); ?>;
+    </script>
 
     <script src="js/script.js"></script> </body>
 </html>
