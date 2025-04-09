@@ -1,32 +1,43 @@
 <?php
+
 // Definiere den Root-Pfad der Anwendung
 define('APP_ROOT', dirname(__DIR__));
 
+// Der Autoloader ist wichtig, um Klassen automatisch zu laden
+require_once APP_ROOT . '/vendor/autoload.php';
+
 // Lade wichtige Konfigurationen (enthält z.B. DB-Zugangsdaten als Konstanten oder Variablen)
 require_once APP_ROOT . '/config/config.php'; 
+
 // Lade globale Funktionen (wie dein getTasks, write_error etc.)
 require_once APP_ROOT . '/src/functions.php'; 
-// Stelle die Datenbankverbindung her (nutzt Daten aus config.php)
-// Die Verbindungslogik könnte auch in einer Funktion in functions.php sein
-// oder in einer separaten Datei wie config/db_connect.php
+
+
+// Hier wird die Datenbankverbindung erstellt
 try {
-    $conn = connect_db(); // Annahme: Funktion connect_db() ist in functions.php definiert
-    hinweis_log("Connected successfully"); 
+    $db = new TodoApp\Database\DbConnection; // HIer wird die Datenbankverbindung erstellt
+    $conn = $db->getConnect(); // Verbindung geholt
+    $taskController = new TodoApp\TaskController($conn); // Instanz der TaskController-Klasse erstellen
+    if ($conn === null) {
+        write_error("Verbindungsfehler: Verbindung ist null." . __FILE__); // Protokolliere den Fehler
+        die("Verbindungsfehler: Verbindung ist null."); // Optional: Zeige den Fehler an (nicht in der Produktion!)
+    }
+    hinweis_log("Datenbankverbindung erfolgreich hergestellt.");
+
 } catch(PDOException $e) {
+    // Fehlerbehandlung, wenn die Verbindung fehlschlägt
     write_error("Connection failed: " . $e->getMessage());
-    // Zeige eine nutzerfreundliche Fehlerseite an und beende das Skript
-    include APP_ROOT . '/templates/error_page.phtml'; // Beispiel
-    exit; 
 }
 
 
+
+
 // --- HIER KOMMT DEINE LOGIK FÜR DIE AKTUELLE SEITE --- 
-// Z.B. Hinzufügen von Tasks (wie in deinem Code)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_task') {
      if (!empty($_POST['task'])) {
-         addTask($conn, $_POST['task']); // Funktion addTask() in functions.php
+        $taskController->addTask($_POST['task']);
      } else {
-         write_error("Bitte Aufgabe eingeben."); // Oder besser: Fehlermeldung für den Nutzer vorbereiten
+        write_error("Bitte Aufgabe eingeben."); // Oder besser: Fehlermeldung für den Nutzer vorbereiten
      }
      // Leite um oder lade die Seite neu, um Doppel-Posts zu verhindern (Post/Redirect/Get Pattern)
      header("Location: index.php"); 
@@ -35,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 
 // Hole die Tasks für die Anzeige
-$tasks = getTasks($conn); // Funktion in functions.php
+$tasks = $taskController->getTasks(); // Hier wird die Methode getTasks() aufgerufen, um alle Aufgaben zu holen
 
 
 // Lade das HTML-Template und übergib die Tasks
