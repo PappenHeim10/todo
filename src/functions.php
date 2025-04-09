@@ -1,6 +1,5 @@
 <?php
 
-
 function write_error($message):void {
 	$logFile = APP_ROOT . '/error.log';// Protokolldatei im übergeordneten Verzeichnis
 	$timestamp = date('d-m-Y H:i:s');

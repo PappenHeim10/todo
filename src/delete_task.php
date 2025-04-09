@@ -57,35 +57,7 @@ if ($taskId === false || $taskId === null) {
     exit; // Wichtig: Skript hier beenden!
 }
 
-// --- Löschen ---
-try {
-    $sql = "DELETE FROM tasks WHERE id = :id";
-    // *** JETZT ist $conn definiert! ***
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':id', $taskId, PDO::PARAM_INT);
-    $success = $stmt->execute();
 
-    if ($success && $stmt->rowCount() > 0) {
-        // Status Code 200 ist Standard, muss nicht gesetzt werden
-        echo json_encode(['success' => true]);
-    } elseif ($success && $stmt->rowCount() === 0) {
-        http_response_code(404); // Not Found
-        echo json_encode(['success' => false, 'message' => 'Task nicht gefunden.']);
-    } else {
-        // execute() gab false zurück
-        http_response_code(500); // Internal Server Error
-        echo json_encode(['success' => false, 'message' => 'Löschen fehlgeschlagen.']);
-    }
-} catch (\PDOException $e) { // Fange PDOException spezifisch hier
-    
-    if (function_exists('write_error')) {
-         write_error("Fehler beim Löschen (ID: $taskId): " . $e->getMessage());
-    } else {
-        error_log("Fehler beim Löschen (ID: $taskId): " . $e->getMessage());
-    }
-    http_response_code(500); // Internal Server Error
-    echo json_encode(['success' => false, 'message' => 'Datenbankfehler beim Löschen.']);
-}
 
 exit; // Sicherstellen, dass das Skript hier endet und nichts mehr ausgibt
 

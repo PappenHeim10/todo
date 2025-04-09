@@ -36,14 +36,13 @@
     </footer>
     </div>
     <?php
-        // OPTIM: Es gibt eine Möglichkeit die einen Rerouter zu benutzen, um die URL nicht im JS zu haben.
-        $deleteBaseUrl = APP_ROOT . '/src/delete_task.php?id=';
-        $updateBaseUrl = APP_ROOT . '/src/update_task.php?id=';    // Basis-URL zum Aktualisieren (ID wird später oder im Body hinzugefügt)
+        $deleteBaseUrl = '/index.php?action=delete_task&id=';
+        $updateBaseUrl = '/index.php?action=update_task'; // ID wird im JS hinzugefügt
     ?>
     <script>
         const DELETE_TASK_URL_BASE = <?php echo json_encode($deleteBaseUrl); ?>;
         const UPDATE_TASK_URL_BASE = <?php echo json_encode($updateBaseUrl); ?>;
     </script>
-
+    
     <script src="js/script.js"></script> </body>
 </html>

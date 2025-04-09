@@ -27,26 +27,100 @@ try {
 // Hier wird die Datenbanverbindung erstellt ENDE
 
 
+//Bestimmt die geünschte Aktion. Standard ist 'list' (Aufgaben anzeigen)
+$action = $_GET['action'] ?? 'list';
+
+// Bestimmt die HTTP-Methode
+$method = $_SERVER['REQUEST_METHOD'];
+
 
 // Die Logik für das Hinzufügen einer Aufgabe
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_task') {
-     if (!empty($_POST['task'])) {
-        $taskController->addTask($_POST['task']);
-     } else {
-        write_error("Bitte Aufgabe eingeben."); // Oder besser: Fehlermeldung für den Nutzer vorbereiten
-     }
-     // Leite um oder lade die Seite neu, um Doppel-Posts zu verhindern (Post/Redirect/Get Pattern)
-     header("Location: index.php"); 
-     exit;
+// 1. Aufgabe hinzufügen (POST-Request auf ?action=add_task)
+if ($action === 'add_task' && $method === 'POST') {
+    if (!empty($_POST['task'])) {
+        $taskController->addTask($_POST['task']); // Methode im Controller aufrufen
+    } else {
+        write_error("Versuch, eine leere Aufgabe hinzuzufügen.");
+    }
+    // Nach POST immer weiterleiten, um Doppel-Posts zu verhindern (Post/Redirect/Get Pattern)
+    header("Location: index.php"); // Leite zur Listenansicht zurück
+    exit;
 }
 
 
-// Hole die Tasks für die Anzeige
-$tasks = $taskController->getTasks(); // Hier wird die Methode getTasks() aufgerufen, um alle Aufgaben zu holen
+// 2. Aufgabe löschen (DELETE oder GET Request auf ?action=delete_task&id=...)
+elseif ($action === 'delete_task' && ($method === 'DELETE' || $method === 'GET')) {
+    header('Content-Type: application/json'); // API-Antwort ist JSON
+    $taskId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+    if ($taskId) {
+        // Rufe die delete-Methode im Controller auf (diese muss erstellt werden!)
+        $success = $taskController->deleteTask($taskId);
+        if ($success) {
+            echo json_encode(['success' => true]);
+        } else {
+            // Controller sollte bei Fehlern false zurückgeben oder Exception werfen
+            // Hier könnte man spezifischere Fehlercodes setzen (404 wenn nicht gefunden, 500 bei DB-Fehler)
+            http_response_code(404); // Annahme: Nicht gefunden oder Fehler
+            echo json_encode(['success' => false, 'message' => 'Task nicht gefunden oder Löschen fehlgeschlagen.']);
+        }
+    } else {
+        http_response_code(400); // Bad Request
+        echo json_encode(['success' => false, 'message' => 'Ungültige oder fehlende Task-ID.']);
+    }
+    exit; // Wichtig: Skript nach API-Antwort beenden
+}
 
 
-// Lade das HTML-Template und übergib die Tasks
-// Hier beginnt die Trennung von Logik und Präsentation
-include APP_ROOT . '/templates/tasks_page.phtml'; 
+// 3. Aufgabe aktualisieren (PATCH oder PUT/POST Request auf ?action=update_task&id=...)
+elseif ($action === 'update_task' && ($method === 'PATCH' || $method === 'PUT' || $method === 'POST')) {
+    header('Content-Type: application/json'); // API-Antwort ist JSON
+    $taskId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT); // ID aus der URL holen
+
+    // Hole die Daten aus dem Request Body (JSON)
+    $requestBody = file_get_contents('php://input');
+    $data = json_decode($requestBody, true); // true -> assoziatives Array
+
+    // Prüfe, ob ID und Daten gültig sind
+    if ($taskId && $data !== null && isset($data['task']) && trim($data['task']) !== '') {
+        $newTaskText = trim($data['task']);
+        // Rufe die update-Methode im Controller auf (diese muss erstellt werden!)
+        $updatedTaskData = $taskController->updateTask($taskId, $newTaskText); // Methode muss implementiert werden
+
+        if ($updatedTaskData) { // Methode könnte bei Erfolg die aktualisierten Daten zurückgeben
+            echo json_encode(['success' => true, 'updatedTask' => $updatedTaskData]);
+        } else {
+            http_response_code(404); // Annahme: Nicht gefunden oder Fehler
+            echo json_encode(['success' => false, 'message' => 'Task nicht gefunden oder Update fehlgeschlagen.']);
+        }
+    } elseif (!$taskId) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Ungültige oder fehlende Task-ID.']);
+    } else {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'Fehlende oder ungültige Task-Daten im Request Body.']);
+    }
+    exit; // Wichtig: Skript nach API-Antwort beenden
+}
+
+
+// 4. Aufgabenliste anzeigen (Standardaktion, wenn action='list' oder keine action angegeben ist)
+elseif ($action === 'list' && $method === 'GET') {
+    // Hole alle Tasks über den Controller
+    $tasks = $taskController->getTasks();
+    // Lade das HTML-Template und übergib die Tasks
+    include APP_ROOT . '/templates/tasks_page.phtml'; // Pfad zum Template anpassen
+    exit;
+}
+
+
+// 5. Unbekannte Aktion oder Methode
+else {
+    http_response_code(404); // Not Found
+    // Zeige eine einfache Fehlerseite oder Nachricht
+    include APP_ROOT . '/templates/404_page.phtml'; // Beispiel
+    // Oder einfach: echo "Seite nicht gefunden.";
+    exit;
+}
 
 ?>
