@@ -6,6 +6,8 @@
     <title>Todo</title>
     <link rel="stylesheet" href="css/style.css"> </head>
 <body>
+    <div class="wrapper">
+        <div class="content">
     <h1>Meine Aufgaben</h1>
 
     <div class="taskliste">
@@ -21,13 +23,15 @@
     </div>
 
     <form action="index.php" method="POST" id="addTaskForm"> 
-         <input type="hidden" name="action" value="add_task"> <input type="text" name="task" id="task" placeholder="Add a new task...">
+        <input type="hidden" name="action" value="add_task"> <input type="text" name="task" id="task" placeholder="Add a new task...">
         <button id="addTask" type="submit">Add Task</button>
     </form>
+    </div>
 
     <footer>
         &copy; <?= date('Y') ?> Todo App. All rights reserved.
     </footer>
+    </div>
 
     <script src="js/script.js"></script> </body>
 </html>

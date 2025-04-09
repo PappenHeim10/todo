@@ -1,7 +1,5 @@
 <?php
-
 namespace TodoApp\Database; // Namespace für die Klasse, wichtig für den Autoloader
-
 
 use PDO; // Importiere die globale PDO-Klasse in diesen Namespace
 use PDOException; // Importiere PDOException
@@ -38,12 +36,6 @@ class DbConnection{ // Datenbankverbindungsklasse
     public function getConnect(): ?PDO{
         return $this->conn; // Gibt die Verbindung zurück
     }
-
-    /**
-    * Destruktor: Schließt die Datenbankverbindung, wenn das Objekt zerstört wird.
-    * Ist oft nicht zwingend notwendig, da PHP Verbindungen am Skriptende schließt,
-    * aber gute Praxis für explizite Kontrolle.
-    */
 
     public function __destruct(){
         $this->conn = null; // Setze die Verbindung auf null, um sie zu schließen

@@ -13,26 +13,22 @@ require_once APP_ROOT . '/config/config.php';
 require_once APP_ROOT . '/src/functions.php'; 
 
 
-// Hier wird die Datenbankverbindung erstellt
+// Hier wird die Datenbankverbindung erstellt ANFANG
 try {
     $db = new TodoApp\Database\DbConnection; // HIer wird die Datenbankverbindung erstellt
     $conn = $db->getConnect(); // Verbindung geholt
     $taskController = new TodoApp\TaskController($conn); // Instanz der TaskController-Klasse erstellen
     if ($conn === null) {
         write_error("Verbindungsfehler: Verbindung ist null." . __FILE__); // Protokolliere den Fehler
-        die("Verbindungsfehler: Verbindung ist null."); // Optional: Zeige den Fehler an (nicht in der Produktion!)
     }
-    hinweis_log("Datenbankverbindung erfolgreich hergestellt.");
-
 } catch(PDOException $e) {
-    // Fehlerbehandlung, wenn die Verbindung fehlschlägt
-    write_error("Connection failed: " . $e->getMessage());
+    write_error("Verbindungsfehler: " . $e->getMessage() . __FILE__); // Protokolliere den Fehler
 }
+// Hier wird die Datenbanverbindung erstellt ENDE
 
 
 
-
-// --- HIER KOMMT DEINE LOGIK FÜR DIE AKTUELLE SEITE --- 
+// Die Logik für das Hinzufügen einer Aufgabe
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_task') {
      if (!empty($_POST['task'])) {
         $taskController->addTask($_POST['task']);

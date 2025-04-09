@@ -12,6 +12,7 @@
  *
  * @param string $className Der vollqualifizierte Name der Klasse (z.B. App\Database\DbConnection).
  */
+
 spl_autoload_register(function ($className) {
     // Definiere den Basis-Namespace deines Projekts.
     // Du kannst dies anpassen, z.B. 'TodoApp' oder was immer du bevorzugst.

@@ -1,6 +1,149 @@
-body{
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
+/* Grundlegende Resets und Body-Styling */
+* {
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    box-sizing: border-box; /* Modernes Box-Modell */
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; /* Moderne System-Schriftarten */
+    font-size: 16px;
+    line-height: 1.6; /* Verbesserte Lesbarkeit */
+    background-color: #f8f9fa; /* Sehr heller Hintergrund */
+    color: #343a40; /* Dunkles Grau für Text */
+    display: flex; /* Ermöglicht Zentrierung des Footers */
+    flex-direction: column;
+    min-height: 100vh; /* Mindesthöhe für Footer-Positionierung */
+    padding: 20px; /* Etwas Abstand zum Rand */
+}
+
+/* Wrapper für die Zentrierung des Inhalts */
+.wrapper {
+    width: 100%;
+    max-width: 700px; /* Maximale Breite für bessere Lesbarkeit */
+    margin: 40px auto; /* Oben/unten Abstand, links/rechts automatisch zentriert */
+    background-color: #ffffff; /* Weißer Hintergrund für den Inhalt */
+    border-radius: 8px; /* Abgerundete Ecken */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Dezenter Schatten */
+    flex-grow: 1; /* Nimmt verfügbaren Platz ein, drückt Footer nach unten */
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    padding: 30px 40px; /* Innenabstand für den Inhalt */
+    flex-grow: 1;
+}
+
+/* Überschrift */
+h1 {
+    color: #212529; /* Etwas dunkler als normaler Text */
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600; /* Etwas dicker */
+}
+
+/* Aufgabenliste */
+.taskliste {
+    margin-bottom: 30px; /* Abstand zur Hinzufügen-Form */
+}
+
+.taskliste p:first-child { /* Spezifischer Selektor für "Keine Aufgaben" */
+    color: #6c757d; /* Grauer Text, wenn keine Aufgaben da sind */
+    text-align: center;
+    padding: 20px 0;
+}
+
+
+/* Einzelne Aufgabe */
+.task {
+    background-color: #ffffff; /* Weißer Hintergrund */
+    border: 1px solid #e9ecef; /* Sehr heller Rand */
+    border-radius: 6px; /* Leicht abgerundete Ecken */
+    padding: 15px 20px; /* Innenabstand */
+    margin-bottom: 15px; /* Abstand zwischen Aufgaben */
+    display: flex; /* Flexbox für Text und Button */
+    justify-content: space-between; /* Elemente auseinander drücken */
+    align-items: center; /* Vertikal zentrieren */
+    transition: box-shadow 0.2s ease-in-out; /* Sanfter Übergang für Hover */
+}
+
+.task:hover {
+     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); /* Leichter Schatten beim Hover */
+}
+
+.task p {
+    flex-grow: 1; /* Text nimmt verfügbaren Platz ein */
+    margin-right: 15px; /* Abstand zum Button */
+    word-break: break-word; /* Lange Wörter umbrechen */
+}
+
+/* Buttons (Allgemein) */
+button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.1s ease; /* Sanfte Übergänge */
+}
+
+button:active {
+    transform: scale(0.98); /* Leichter Klick-Effekt */
+}
+
+/* Delete Button */
+button.delete {
+    background-color: #dc3545; /* Roter Hintergrund */
+    color: white;
+    font-size: 0.9em;
+}
+
+button.delete:hover {
+    background-color: #c82333; /* Dunkleres Rot beim Hover */
+}
+
+/* Formular zum Hinzufügen */
+#addTaskForm {
+    display: flex; /* Elemente nebeneinander */
+    gap: 10px; /* Abstand zwischen Input und Button */
+    margin-top: 20px; /* Abstand zur Liste */
+}
+
+#addTaskForm input[type="text"] {
+    flex-grow: 1; /* Nimmt den meisten Platz ein */
+    padding: 12px 15px; /* Innenabstand */
+    border: 1px solid #ced4da; /* Heller grauer Rand */
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+#addTaskForm input[type="text"]:focus {
+    outline: none;
+    border-color: #80bdff; /* Blauer Rand beim Fokus */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Leichter Schein beim Fokus */
+}
+
+
+/* Add Task Button */
+#addTaskForm button#addTask {
+    background-color: #007bff; /* Blauer Hintergrund */
+    color: white;
+    white-space: nowrap; /* Verhindert Umbruch des Button-Texts */
+}
+
+#addTaskForm button#addTask:hover {
+    background-color: #0056b3; /* Dunkleres Blau beim Hover */
+}
+
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: auto; /* Drückt den Footer nach unten */
+    padding: 20px 0;
+    color: #6c757d; /* Helles Grau */
+    font-size: 0.9em;
+    width: 100%; /* Nimmt volle Breite ein */
+    /* Kein max-width, damit er unter dem .wrapper zentriert bleibt */
 }
